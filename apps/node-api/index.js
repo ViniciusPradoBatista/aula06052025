@@ -4,7 +4,6 @@ const axios = require('axios');
 const app = express();
 const PORT = 3000;
 
-// Endpoint que consome a API Python
 app.get('/from-python', async (req, res) => {
   try {
     const response = await axios.get('http://python_api:5000/');
