@@ -7,18 +7,33 @@ services:
     volumes:
       - "./python-api:/app"
     command: "python app.py"
+    depends_on:
+      - mysql_db
+    networks:
+      - app-networks
 
-mysql_db:
-  image: mysql:8.0
-  environment:
-    MYSQL_USER: root
-    MYSQL_HOST: mysql_db
-    MYSQL_ROOT_PASSOWORD: root
-    MYSQL_DATABASE: flaskdb
-  ports:
-    - "3307:3306"
-  volumes:
-    - mysql_data:/var/lib/mysql
+  node_api:
+    build: ./node-api
+    container_name: node_api
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./node-api:/app"
+    command: "npm start"
+    depends_on:
+      - flask_api
+    networks:
+      - app-networks
+
+  mysql_db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: flaskdb
+    ports:
+      - "3307:3306"
+    networks:
+      - app-networks
 
 networks:
   app-networks:
